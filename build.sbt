@@ -4,9 +4,9 @@ import _root_.org.errors4s.sbt._
 
 // Constants //
 
-lazy val org           = "org.errors4s"
+lazy val errors4sOrg   = "org.errors4s"
 lazy val jreVersion    = "16"
-lazy val projectName   = "errors4s-core"
+lazy val projectName   = "errors4s-core-scalacheck"
 lazy val projectUrl    = url(s"https://github.com/errors4s/${projectName}")
 lazy val scala212      = "2.12.14"
 lazy val scala213      = "2.13.6"
@@ -18,7 +18,7 @@ lazy val scalaVersions = Set(scala212, scala213, scala30)
 // Usually run before making a PR
 addCommandAlias(
   "full_build",
-  s";+clean;githubWorkflowGenerate;+test;+test:doc;+versionSchemeEnforcerCheck;++${scala213};scalafmtAll;scalafmtSbt;scalafixAll;++${scala30};docs/mdoc"
+  s";+clean;githubWorkflowGenerate;+test;+test:doc;+versionSchemeEnforcerCheck;++${scala213};scalafmtAll;scalafmtSbt;scalafixAll;docs/mdoc"
 )
 
 // Functions //
@@ -44,7 +44,7 @@ ThisBuild / dependencyOverrides += G.scalametaG % A.semanticdbA % V.semanticdbV 
 
 ThisBuild / crossScalaVersions := scalaVersions.toSeq
 
-ThisBuild / organization := org
+ThisBuild / organization := errors4sOrg
 ThisBuild / scalaVersion := scala30
 ThisBuild / scalafixDependencies ++= List(G.organizeImportsG %% A.organizeImportsA % V.organizeImportsV)
 ThisBuild / scalafixScalaBinaryVersion := "2.13"
@@ -65,7 +65,7 @@ ThisBuild / githubWorkflowBuild := List(WorkflowStep.Sbt(List("versionSchemeEnfo
 // Doc Settings
 
 def scaladocLink(scalaBinaryVersion: String, version: String): String =
-  s"https://www.javadoc.io/doc/${org}/${projectName}_${scalaBinaryVersion}/${version}/index.html"
+  s"https://www.javadoc.io/doc/${errors4sOrg}/${projectName}_${scalaBinaryVersion}/${version}/index.html"
 
 lazy val docSettings: List[Def.Setting[_]] = List(
   apiURL := Some(url(scaladocLink(scalaBinaryVersion.value, version.value))),
@@ -82,8 +82,17 @@ lazy val docSettings: List[Def.Setting[_]] = List(
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((3, _)) =>
         List(
-          s"-external-mappings:.*java.*::javadoc::https://docs.oracle.com/en/java/javase/${jreVersion}/docs/api/java.base/",
-          s"-social-links:github::https://github.com/errors4s/${projectName}"
+          "-external-mappings:" +
+            List(
+              s".*java.*::javadoc::https://docs.oracle.com/en/java/javase/${jreVersion}/docs/api/java.base/",
+              """.*scala..*::scaladoc3::http://dotty.epfl.ch/api/""",
+              s""".*org.errors.core..*::scaladoc3::https://www.javadoc.io/doc/${errors4sOrg}/${A.errors4sCoreA}_3/${V
+                .errors4sCoreV}/api/""",
+              s""".*org.scalacheck..*::scaladoc3::https://www.javadoc.io/doc/${G.scalacheckG}/${A
+                .scalacheckA}_3/${V.scalacheckV}/api/"""
+            ).mkString(","),
+          s"-social-links:github::https://github.com/errors4s/${projectName}",
+          "-verbose"
         )
       case Some((2, n)) =>
         List("-language:experimental.macros") ++
@@ -167,30 +176,29 @@ lazy val root = (project in file("."))
       Compile / packageSrc / publishArtifact := false
     )
   )
-  .aggregate(core)
+  .aggregate(scalacheck)
   .disablePlugins(SbtVersionSchemeEnforcerPlugin)
 
-// Core //
+// Scalacheck //
 
-lazy val core = project
+lazy val scalacheck = project
   .settings(commonSettings, publishSettings)
   .settings(
     name := s"${projectName}",
     console / initialCommands :=
-      initialImports(List("org.errors4s.core", "org.errors4s.core.syntax.all"), isScala3(scalaBinaryVersion.value)),
-    libraryDependencies ++= {
-      if (isScala3(scalaBinaryVersion.value)) {
-        Nil
-      } else {
-        List(G.scalaLangG % A.scalaReflectA % scalaVersion.value % Provided)
-      }
-    },
-    libraryDependencies ++= List(G.scalametaG %% A.munitA % V.munitV % Test)
+      List(
+        "org.errors4s.core._",
+        "org.errors4s.core.syntax.all._",
+        "org.errors4s.core.scalacheck.instances._",
+        "org.scalacheck._"
+      ).map(value => s"import $value").mkString("\n"),
+    libraryDependencies ++=
+      List(G.scalacheckG %% A.scalacheckA % V.scalacheckV, errors4sOrg %% A.errors4sCoreA % V.errors4sCoreV)
   )
 
 // Docs //
 
-lazy val docs = (project.in(file("errors4s-core-docs")))
+lazy val docs = (project.in(file("errors4s-core-scalacheck-docs")))
   .settings(commonSettings)
   .settings(
     name := s"${projectName}-docs",
@@ -207,12 +215,12 @@ lazy val docs = (project.in(file("errors4s-core-docs")))
         "LATEST_RELEASE"       -> latestRelease,
         "SCALA_BINARY_VERSION" -> scalaBinVer,
         "SCALADOC_LINK"        -> scaladocLink(scalaBinVer, latestRelease),
-        "ORG"                  -> org,
+        "ORG"                  -> errors4sOrg,
         "PROJECT_NAME"         -> projectName
       )
     },
     mdocIn := file("docs-src"),
     mdocOut := file("docs")
   )
-  .dependsOn(core)
+  .dependsOn(scalacheck)
   .enablePlugins(MdocPlugin)
