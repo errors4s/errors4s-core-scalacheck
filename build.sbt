@@ -4,7 +4,8 @@ import _root_.org.errors4s.sbt._
 
 // Constants //
 
-lazy val errors4sOrg   = "org.errors4s"
+lazy val githubOrg     = "errors4s"
+lazy val errors4sOrg   = s"org.${githubOrg}"
 lazy val jreVersion    = "16"
 lazy val projectName   = "errors4s-core-scalacheck"
 lazy val projectUrl    = url(s"https://github.com/errors4s/${projectName}")
@@ -67,6 +68,12 @@ ThisBuild / githubWorkflowBuild := List(WorkflowStep.Sbt(List("versionSchemeEnfo
 def scaladocLink(scalaBinaryVersion: String, version: String): String =
   s"https://www.javadoc.io/doc/${errors4sOrg}/${projectName}_${scalaBinaryVersion}/${version}/index.html"
 
+def javadocIoLink(groupId: String, artifactId: String, depVersion: String, scalaBinaryVersion: Option[String]): String =
+  scalaBinaryVersion
+    .fold(s"https://www.javadoc.io/doc/${groupId}/${artifactId}/${depVersion}/api/")(scalaBinaryVersion =>
+      s"https://www.javadoc.io/doc/${groupId}/${artifactId}_${scalaBinaryVersion}/${depVersion}/api/"
+    )
+
 lazy val docSettings: List[Def.Setting[_]] = List(
   apiURL := Some(url(scaladocLink(scalaBinaryVersion.value, version.value))),
   autoAPIMappings := true,
@@ -85,11 +92,19 @@ lazy val docSettings: List[Def.Setting[_]] = List(
           "-external-mappings:" +
             List(
               s".*java.*::javadoc::https://docs.oracle.com/en/java/javase/${jreVersion}/docs/api/java.base/",
-              """.*scala..*::scaladoc3::http://dotty.epfl.ch/api/""",
-              s""".*org.errors.core..*::scaladoc3::https://www.javadoc.io/doc/${errors4sOrg}/${A.errors4sCoreA}_3/${V
-                .errors4sCoreV}/api/""",
-              s""".*org.scalacheck..*::scaladoc3::https://www.javadoc.io/doc/${G.scalacheckG}/${A
-                .scalacheckA}_3/${V.scalacheckV}/api/"""
+              """.*scala/.*::scaladoc3::http://dotty.epfl.ch/api/""",
+              s""".*org/errors4s/core.*::scaladoc3::${javadocIoLink(
+                errors4sOrg,
+                A.errors4sCoreA,
+                V.errors4sCoreV,
+                Some("3")
+              )}""",
+              s""".*org/scalacheck/.*::scaladoc3::${javadocIoLink(
+                G.scalacheckG,
+                A.scalacheckA,
+                V.scalacheckV,
+                Some("3")
+              )}"""
             ).mkString(","),
           s"-social-links:github::https://github.com/errors4s/${projectName}",
           "-verbose"

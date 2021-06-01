@@ -4,7 +4,7 @@
 
 [The Scaladoc for errors4s-core may be viewed here][javadoc].
 
-[javadoc]: https://www.javadoc.io/doc/org.errors4s/errors4s-core-scalacheck_2.13/1.0.0.0-RC0/index.html "Scaladoc"
+[javadoc]: https://www.javadoc.io/doc/org.errors4s/errors4s-core-scalacheck_2.13/0.1.2/index.html "Scaladoc"
 
 # Overview #
 
@@ -20,7 +20,7 @@ This project provides [Scalacheck][scalacheck] instances ([Arbitrary][scalacheck
 Add this to your `libraryDependencies` in your `build.sbt`.
 
 ```scala
-    "org.errors4s" %% "errors4s-core-scalacheck" % "1.0.0.0-RC0"
+    "org.errors4s" %% "errors4s-core-scalacheck" % "0.1.2"
 ```
 
 # Using #
@@ -33,10 +33,10 @@ import org.errors4s.core.scalacheck.instances._
 import org.scalacheck._
 
 implicitly[Arbitrary[NonEmptyString]]
-// res0: Arbitrary[NonEmptyString] = org.scalacheck.ArbitraryLowPriority$$anon$1@6d12f5d2
+// res0: Arbitrary[NonEmptyString] = org.scalacheck.ArbitraryLowPriority$$anon$1@1925ae10
 
 Arbitrary.arbitrary[NonEmptyString]
-// res1: Gen[NonEmptyString] = org.scalacheck.Gen$$anon$5@7651d6ce
+// res1: Gen[NonEmptyString] = org.scalacheck.Gen$$anon$5@7f71fb96
 ```
 
 If for some reason you want to customize the underlying [Arbitrary][scalacheck-arbitrary] instance, you can do like this.
@@ -47,7 +47,7 @@ import org.errors4s.core.scalacheck.instances._
 import org.scalacheck.{Arbitrary, Gen}
 
 implicit val arbString: Arbitrary[String] = Arbitrary(Gen.const("custom non-empty string"))
-// arbString: Arbitrary[String] = org.scalacheck.ArbitraryLowPriority$$anon$1@6f61d52b
+// arbString: Arbitrary[String] = org.scalacheck.ArbitraryLowPriority$$anon$1@248faa57
 
 Arbitrary.arbitrary[NonEmptyString].sample
 // res3: Option[NonEmptyString] = Some(
@@ -70,9 +70,9 @@ This project uses [Package Versioning Policy (PVP)][pvp]. This is to allow long 
 
 If you need support for a version combination which is not listed here, please open an issue and we will endeavor to add support for it if possible.
 
-|Version|Scalacheck Version|Scala 2.11|Scala 2.12|Scala 2.13|Scala 3.0|
-|-------|:----------------:|:--------:|:--------:|:--------:|:-------:|
-|1.0.x.x|1.15.4            |No        |Yes       |Yes       |Yes      |
+|Version|Errors4s Core|Scalacheck Version|Scala 2.11|Scala 2.12|Scala 2.13|Scala 3.0|
+|-------|:-----------:|:----------------:|:--------:|:--------:|:--------:|:-------:|
+|1.0.x.x|1.0.x.x      |1.15.4            |No        |Yes       |Yes       |Yes      |
 
 [pvp]: https://pvp.haskell.org/ "PVP"
 [errors4s-core-pvp]: https://github.com/errors4s/errors4s-core#versioning "Errors4s Core: Versioning"

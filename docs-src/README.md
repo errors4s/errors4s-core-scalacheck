@@ -61,9 +61,9 @@ This project uses [Package Versioning Policy (PVP)][pvp]. This is to allow long 
 
 If you need support for a version combination which is not listed here, please open an issue and we will endeavor to add support for it if possible.
 
-|Version|Scalacheck Version|Scala 2.11|Scala 2.12|Scala 2.13|Scala 3.0|
-|-------|:----------------:|:--------:|:--------:|:--------:|:-------:|
-|1.0.x.x|1.15.4            |No        |Yes       |Yes       |Yes      |
+|Version|Errors4s Core|Scalacheck Version|Scala 2.11|Scala 2.12|Scala 2.13|Scala 3.0|
+|-------|:-----------:|:----------------:|:--------:|:--------:|:--------:|:-------:|
+|1.0.x.x|1.0.x.x      |1.15.4            |No        |Yes       |Yes       |Yes      |
 
 [pvp]: https://pvp.haskell.org/ "PVP"
 [errors4s-core-pvp]: https://github.com/errors4s/errors4s-core#versioning "Errors4s Core: Versioning"
