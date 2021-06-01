@@ -27,14 +27,14 @@ Add this to your `libraryDependencies` in your `build.sbt`.
 
 The instances provided here are [orphan][orphan] instances. To use them you need to import the `org.errors4s.core.scalacheck.instances._` package. You will also need to have an underlying implicit [Arbitrary][scalacheck-arbitrary] or [Cogen][scalacheck-cogen] in scope.
 
-```scala mdoc
+```scala
 import org.errors4s.core._
 import org.errors4s.core.scalacheck.instances._
 import org.scalacheck._
 
-implicitly[Arbitrary[NonEmptyString]]
+val arb: Arbitrary[NonEmptyString] = implicitly[Arbitrary[NonEmptyString]]
 
-Arbitrary.arbitrary[NonEmptyString]
+val gen: Gen[NonEmptyString] = Arbitrary.arbitrary[NonEmptyString]
 ```
 
 If for some reason you want to customize the underlying [Arbitrary][scalacheck-arbitrary] instance, you can do like this.
