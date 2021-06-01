@@ -4,15 +4,15 @@
 
 [The Scaladoc for errors4s-core may be viewed here][javadoc].
 
-[javadoc]: https://www.javadoc.io/doc/org.errors4s/errors4s-core-scalacheck_2.13/0.1.2/index.html "Scaladoc"
+[javadoc]: https://www.javadoc.io/doc/org.errors4s/errors4s-core-scalacheck_3/0.1.2/index.html "Scaladoc"
 
 # Overview #
 
 This project provides [Scalacheck][scalacheck] instances ([Arbitrary][scalacheck-arbitrary] and [Cogen][scalacheck-cogen]) for [Errors4s Core][errors4s-core] types.
 
 [scalacheck]: https://github.com/typelevel/scalacheck "Scalacheck"
-[scalacheck-arbitrary]: https://www.javadoc.io/doc/org.scalacheck/scalacheck_2.13/latest/api/org/scalacheck/Arbitrary.html "Scalacheck: Arbitrary"
-[scalacheck-cogen]: https://www.javadoc.io/doc/org.scalacheck/scalacheck_2.13/latest/api/org/scalacheck/Cogen.html "Scalacheck: Cogen"
+[scalacheck-arbitrary]: https://www.javadoc.io/doc/org.scalacheck/scalacheck_3/latest/api/org/scalacheck/Arbitrary.html "Scalacheck: Arbitrary"
+[scalacheck-cogen]: https://www.javadoc.io/doc/org.scalacheck/scalacheck_3/latest/api/org/scalacheck/Cogen.html "Scalacheck: Cogen"
 [errors4s-core]: https://github.com/errors4s/errors4s-core "Errors4s Core"
 
 # Add To Your Build #
@@ -33,10 +33,10 @@ import org.errors4s.core.scalacheck.instances._
 import org.scalacheck._
 
 implicitly[Arbitrary[NonEmptyString]]
-// res0: Arbitrary[NonEmptyString] = org.scalacheck.ArbitraryLowPriority$$anon$1@1925ae10
+// res0: Arbitrary[NonEmptyString] = org.scalacheck.ArbitraryLowPriority$$anon$1@2c044b1a
 
 Arbitrary.arbitrary[NonEmptyString]
-// res1: Gen[NonEmptyString] = org.scalacheck.Gen$$anon$5@7f71fb96
+// res1: Gen[NonEmptyString] = org.scalacheck.Gen$$anon$5@f16c769
 ```
 
 If for some reason you want to customize the underlying [Arbitrary][scalacheck-arbitrary] instance, you can do like this.
@@ -47,19 +47,15 @@ import org.errors4s.core.scalacheck.instances._
 import org.scalacheck.{Arbitrary, Gen}
 
 implicit val arbString: Arbitrary[String] = Arbitrary(Gen.const("custom non-empty string"))
-// arbString: Arbitrary[String] = org.scalacheck.ArbitraryLowPriority$$anon$1@248faa57
+// arbString: Arbitrary[String] = org.scalacheck.ArbitraryLowPriority$$anon$1@29489a4a
 
 Arbitrary.arbitrary[NonEmptyString].sample
-// res3: Option[NonEmptyString] = Some(
-//   value = NonEmptyStringImpl(value = "custom non-empty string")
-// )
+// res3: Option[NonEmptyString] = Some("custom non-empty string")
 
 // Or more explicitly
 
 arbNonEmptyString(arbString).arbitrary.sample
-// res4: Option[NonEmptyString] = Some(
-//   value = NonEmptyStringImpl(value = "custom non-empty string")
-// )
+// res4: Option[NonEmptyString] = Some("custom non-empty string")
 ```
 
 [orphan]: https://wiki.haskell.org/Orphan_instance "Orphan"
