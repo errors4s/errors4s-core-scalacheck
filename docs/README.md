@@ -45,15 +45,15 @@ import org.errors4s.core.scalacheck.instances._
 import org.scalacheck.{Arbitrary, Gen}
 
 implicit val arbString: Arbitrary[String] = Arbitrary(Gen.const("custom non-empty string"))
-// arbString: Arbitrary[String] = org.scalacheck.ArbitraryLowPriority$$anon$1@751a3629
-
+```
+```scala
 Arbitrary.arbitrary[NonEmptyString].sample
-// res1: Option[NonEmptyString] = Some("custom non-empty string")
+// res0: Option[NonEmptyString] = Some("custom non-empty string")
 
 // Or more explicitly
 
 arbNonEmptyString(arbString).arbitrary.sample
-// res2: Option[NonEmptyString] = Some("custom non-empty string")
+// res1: Option[NonEmptyString] = Some("custom non-empty string")
 ```
 
 [orphan]: https://wiki.haskell.org/Orphan_instance "Orphan"

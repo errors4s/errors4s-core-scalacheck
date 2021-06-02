@@ -39,12 +39,14 @@ val gen: Gen[NonEmptyString] = Arbitrary.arbitrary[NonEmptyString]
 
 If for some reason you want to customize the underlying [Arbitrary][scalacheck-arbitrary] instance, you can do like this.
 
-```scala mdoc:reset
+```scala mdoc:silent
 import org.errors4s.core._
 import org.errors4s.core.scalacheck.instances._
 import org.scalacheck.{Arbitrary, Gen}
 
 implicit val arbString: Arbitrary[String] = Arbitrary(Gen.const("custom non-empty string"))
+```
+```scala mdoc
 
 Arbitrary.arbitrary[NonEmptyString].sample
 
