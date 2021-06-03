@@ -27,7 +27,7 @@ Add this to your `libraryDependencies` in your `build.sbt`.
 
 The instances provided here are [orphan][orphan] instances. To use them you need to import the `org.errors4s.core.scalacheck.instances._` package. You will also need to have an underlying implicit [Arbitrary][scalacheck-arbitrary] or [Cogen][scalacheck-cogen] in scope.
 
-```scala
+```scala mdoc:to-string
 import org.errors4s.core._
 import org.errors4s.core.scalacheck.instances._
 import org.scalacheck._
