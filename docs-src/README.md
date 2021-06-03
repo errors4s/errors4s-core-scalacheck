@@ -40,7 +40,7 @@ In version <= 0.1.x of this project the `NonEmptyString` type from the excellent
 
 `NonEmptyString` values can not be directly created at runtime. The only method to directly create them is `from` which returns an `Either[String, NonEmptyString]`, which is `Left` if the given `String` is `null` or `""`.
 
-```scala mdoc
+```scala mdoc:to-string
 import org.errors4s.core._
 
 NonEmptyString.from("")
@@ -54,13 +54,13 @@ Thankfully, `NonEmptyString` provides two mechanisms to safely create instances 
 
 The first is the `apply` method. This method uses a compile time macro (different ones for Scala 2 and 3) to check that the given `String` is a non-empty literal value. If it is, then it lifts it into a `NonEmptyString` instance, if it isn't then it yields a _compilation error_. For example,
 
-```scala mdoc
+```scala mdoc:to-string
 NonEmptyString("A non-empty string")
 ```
 
 This works well for many situations, but sometimes we want to provide some runtime context in our `NonEmptyString`. For that we can use the `nes` interpolator. The `nes` interpolator allows us to interpolate arbitrary values into our `NonEmptyString` as long as _at least some part of it is a non-empty string literal at compile time_. To use this we need to import `syntax.all` (or `syntax.nes`). For example,
 
-```scala mdoc
+```scala mdoc:to-string
 import org.errors4s.core.syntax.all._
 
 val port: Int = 70000
@@ -70,7 +70,7 @@ nes"Invalid port number: ${port}"
 
 Once you have a `NonEmptyString` value you can also add arbitrary other `String` values to it, while retaining the `NonEmptyString`. Thus an alternative way to encode the above expression could have been,
 
-```scala mdoc
+```scala mdoc:to-string
 val base: NonEmptyString = NonEmptyString("Invalid port number: ")
 
 val value: NonEmptyString = base :+ port.toString
@@ -82,7 +82,7 @@ val value: NonEmptyString = base :+ port.toString
 
 They are all pretty straight forward, effectively allowing convenient access to all the permutations of an `Error` encoding.
 
-```scala mdoc
+```scala mdoc:to-string
 Error.withMessage(nes"An error has occurred")
 Error.withMessages(nes"An error has occurred", "It was very bad")
 Error.withMessagesAndCause(nes"An error has occurred", "It was very bad", Error.withMessage(nes"This was the cause"))
@@ -90,7 +90,7 @@ Error.withMessagesAndCause(nes"An error has occurred", "It was very bad", Error.
 
 As mentioned above, `getMessage` aggregates the entire error context together. For example,
 
-```scala mdoc
+```scala mdoc:to-string
 Error.withMessagesAndCause(nes"An error has occurred", "It was very bad", Error.withMessage(nes"This was the cause")).getMessage
 ```
 

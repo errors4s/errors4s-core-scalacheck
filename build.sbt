@@ -14,6 +14,14 @@ lazy val scala213      = "2.13.6"
 lazy val scala30       = "3.0.0"
 lazy val scalaVersions = Set(scala212, scala213, scala30)
 
+// SBT Command Aliases //
+
+// Usually run before making a PR
+addCommandAlias(
+  "full_build",
+  s";+clean;githubWorkflowGenerate;+test;+test:doc;+versionSchemeEnforcerCheck;docs/mdoc;++${scala213};scalafmtAll;scalafmtSbt;scalafixAll"
+)
+
 // Functions //
 
 def isScala3(version: String): Boolean = version.startsWith("3")
@@ -42,14 +50,26 @@ ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 // Baseline version for repo split
 
-ThisBuild / versionSchemeEnforcerIntialVersion := Some("1.0.0.0")
+ThisBuild / versionSchemeEnforcerInitialVersion := Some("1.0.0.0")
 ThisBuild / versionScheme := Some("pvp")
 
 // GithubWorkflow
 ThisBuild / githubWorkflowPublishTargetBranches := Nil
 ThisBuild / githubWorkflowOSes := Set("macos-latest", "ubuntu-latest").toList
 ThisBuild / githubWorkflowJavaVersions := Set("adopt@1.16", "adopt@1.11", "adopt@1.8").toList
-ThisBuild / githubWorkflowBuild := List(WorkflowStep.Sbt(List("versionSchemeEnforcerCheck", "Test / doc")))
+ThisBuild / githubWorkflowBuildPreamble :=
+  List(
+    WorkflowStep.Sbt(
+      List(
+        "versionSchemeEnforcerCheck",
+        "Test / doc",
+        "undeclaredCompileDependenciesTest",
+        "unusedCompileDependenciesTest",
+        "Test / undeclaredCompileDependenciesTest",
+        "Test / unusedCompileDependenciesTest"
+      )
+    )
+  )
 
 // Doc Settings
 

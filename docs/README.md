@@ -44,15 +44,11 @@ In version <= 0.1.x of this project the `NonEmptyString` type from the excellent
 import org.errors4s.core._
 
 NonEmptyString.from("")
-// res0: Either[String, NonEmptyString] = Left(
-//   "Unable to create NonEmptyString from empty string value."
-// )
+// res0: Either[String, NonEmptyString] = Left(Unable to create NonEmptyString from empty string value.)
 NonEmptyString.from(null)
-// res1: Either[String, NonEmptyString] = Left(
-//   "Given String value was null. This is not permitted for NonEmptyString values."
-// )
+// res1: Either[String, NonEmptyString] = Left(Given String value was null. This is not permitted for NonEmptyString values.)
 NonEmptyString.from("A non-empty string")
-// res2: Either[String, NonEmptyString] = Right("A non-empty string")
+// res2: Either[String, NonEmptyString] = Right(A non-empty string)
 ```
 
 This is a somewhat cumbersome way to create `NonEmptyString` values, especially if we are using them for error messages. We don't want to always handle the `Left` branch of this `Either` when we are certain we are providing non-empty values.
@@ -63,7 +59,7 @@ The first is the `apply` method. This method uses a compile time macro (differen
 
 ```scala
 NonEmptyString("A non-empty string")
-// res3: NonEmptyString = "A non-empty string"
+// res3: NonEmptyString = A non-empty string
 ```
 
 This works well for many situations, but sometimes we want to provide some runtime context in our `NonEmptyString`. For that we can use the `nes` interpolator. The `nes` interpolator allows us to interpolate arbitrary values into our `NonEmptyString` as long as _at least some part of it is a non-empty string literal at compile time_. To use this we need to import `syntax.all` (or `syntax.nes`). For example,
@@ -75,17 +71,17 @@ val port: Int = 70000
 // port: Int = 70000
 
 nes"Invalid port number: ${port}"
-// res4: NonEmptyString = "Invalid port number: 70000"
+// res4: NonEmptyString = Invalid port number: 70000
 ```
 
 Once you have a `NonEmptyString` value you can also add arbitrary other `String` values to it, while retaining the `NonEmptyString`. Thus an alternative way to encode the above expression could have been,
 
 ```scala
 val base: NonEmptyString = NonEmptyString("Invalid port number: ")
-// base: NonEmptyString = "Invalid port number: "
+// base: NonEmptyString = Invalid port number: 
 
 val value: NonEmptyString = base :+ port.toString
-// value: NonEmptyString = "Invalid port number: 70000"
+// value: NonEmptyString = Invalid port number: 70000
 ```
 
 ## Error ##
@@ -96,26 +92,18 @@ They are all pretty straight forward, effectively allowing convenient access to 
 
 ```scala
 Error.withMessage(nes"An error has occurred")
-// res5: Error = ErrorImpl("An error has occurred", Vector(), Vector())
+// res5: Error = Error(primaryErrorMessage = An error has occurred, secondaryErrorMessages = Vector(), causes = Vector())
 Error.withMessages(nes"An error has occurred", "It was very bad")
-// res6: Error = ErrorImpl(
-//   "An error has occurred",
-//   Vector("It was very bad"),
-//   Vector()
-// )
+// res6: Error = Error(primaryErrorMessage = An error has occurred, secondaryErrorMessages = Vector(It was very bad), causes = Vector())
 Error.withMessagesAndCause(nes"An error has occurred", "It was very bad", Error.withMessage(nes"This was the cause"))
-// res7: Error = ErrorImpl(
-//   "An error has occurred",
-//   Vector("It was very bad"),
-//   Vector(ErrorImpl("This was the cause", Vector(), Vector()))
-// )
+// res7: Error = Error(primaryErrorMessage = An error has occurred, secondaryErrorMessages = Vector(It was very bad), causes = Vector(Error(primaryErrorMessage = This was the cause, secondaryErrorMessages = Vector(), causes = Vector())))
 ```
 
 As mentioned above, `getMessage` aggregates the entire error context together. For example,
 
 ```scala
 Error.withMessagesAndCause(nes"An error has occurred", "It was very bad", Error.withMessage(nes"This was the cause")).getMessage
-// res8: String = "Primary Error: An error has occurred, Secondary Errors(It was very bad), Causes(Primary Error: This was the cause)"
+// res8: String = Primary Error: An error has occurred, Secondary Errors(It was very bad), Causes(Primary Error: This was the cause)
 ```
 
 [refined]: https://github.com/refined "refined"
