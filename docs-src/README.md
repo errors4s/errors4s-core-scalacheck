@@ -65,7 +65,10 @@ If you need support for a version combination which is not listed here, please o
 
 |Version|Errors4s Core|Scalacheck Version|Scala 2.11|Scala 2.12|Scala 2.13|Scala 3.0|
 |-------|:-----------:|:----------------:|:--------:|:--------:|:--------:|:-------:|
-|1.0.x.x|1.0.x.x      |1.15.4            |No        |Yes       |Yes       |Yes      |
+|1.0.x.x|1.0.x.x      |1.x.x (>= 1.15.x) |No        |Yes       |Yes       |Yes      |
+
+The [scalacheck][scalacheck] version is a bit odd in this matrix. This is because [scalacheck][scalacheck] switched to using [semver][semver] during the 1.14.x development cycle (AFAIK).
 
 [pvp]: https://pvp.haskell.org/ "PVP"
 [errors4s-core-pvp]: https://github.com/errors4s/errors4s-core#versioning "Errors4s Core: Versioning"
+[semver]: https://semver.org/ "Semver"
