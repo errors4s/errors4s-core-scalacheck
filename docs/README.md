@@ -4,7 +4,7 @@
 
 [The Scaladoc for errors4s-core may be viewed here][javadoc].
 
-[javadoc]: https://www.javadoc.io/doc/org.errors4s/errors4s-core-scalacheck_3/1.0.0.0-RC0/index.html "Scaladoc"
+[javadoc]: https://www.javadoc.io/doc/org.errors4s/errors4s-core-scalacheck_3/0.1.2/index.html "Scaladoc"
 
 # Overview #
 
@@ -20,7 +20,7 @@ This project provides [Scalacheck][scalacheck] instances ([Arbitrary][scalacheck
 Add this to your `libraryDependencies` in your `build.sbt`.
 
 ```scala
-    "org.errors4s" %% "errors4s-core-scalacheck" % "1.0.0.0-RC0"
+    "org.errors4s" %% "errors4s-core-scalacheck" % "0.1.2"
 ```
 
 # Using #
