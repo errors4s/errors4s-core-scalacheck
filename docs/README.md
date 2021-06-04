@@ -48,12 +48,12 @@ implicit val arbString: Arbitrary[String] = Arbitrary(Gen.const("custom non-empt
 ```
 ```scala
 Arbitrary.arbitrary[NonEmptyString].sample
-// res0: Option[NonEmptyString] = Some("custom non-empty string")
+// res1: Option[NonEmptyString] = Some("custom non-empty string")
 
 // Or more explicitly
 
 arbNonEmptyString(arbString).arbitrary.sample
-// res1: Option[NonEmptyString] = Some("custom non-empty string")
+// res2: Option[NonEmptyString] = Some("custom non-empty string")
 ```
 
 [orphan]: https://wiki.haskell.org/Orphan_instance "Orphan"
